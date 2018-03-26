@@ -3,6 +3,7 @@ let rowWeather = document.getElementById("row-weather");
 
 function loadPage() {
     getPosition();
+    requestFlickrAPI();
     // changePage();
     // let buttonChange = document.getElementsByClassName("btn");
     // console.log(buttonChange);
@@ -55,9 +56,111 @@ function requestAPI(proxy, url) {
 //     .catch(e => console.log("algo salió mal", e));
 }
 
+[6464646, 64646464, 3737373 , 373737]
+
+function requestFlickrAPI() {
+    $.ajax({
+        // url: 'https://api.flickr.com/services/rest/?method=flickr.photos.getInfo&api_key=17ed078c88241373c5dec61766a24888&photo_id=25960415137&format=json&nojsoncallback=1'
+        url: "https://api.flickr.com/services/rest/?method=flickr.photos.getRecent&api_key=17ed078c88241373c5dec61766a24888&format=json&nojsoncallback=1",
+        // url: 'https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=17ed078c88241373c5dec61766a24888&format=json&nojsoncallback=1',
+        // format: "json"
+    })
+    .done(photos)
+    .fail(error);
+}
+
+function photos(photoFlickr) {
+    // console.log(photoFlickr);
+    
+    const photos = photoFlickr.photos.photo;
+    // console.log(photos);
+    let photoId;
+    
+    photos.forEach(element => {
+        // console.log(element);
+        
+        photoId = element.id;
+        // console.log(photoId);
+           
+    })
+
+    idPhotos(photoId);
+}
+
+function idPhotos(photoId) {
+    $.ajax({
+        url: "https://cors-anywhere.herokuapp.com/https://api.flickr.com/services/rest/?method=flickr.photos.getInfo&api_key=17ed078c88241373c5dec61766a24888&photo_id=" + photoId + "&format=json&nojsoncallback=1"
+    })
+    .done(accessPhoto)
+    .fail(error);
+}
+
+
+function accessPhoto(urlPhotos) {
+    // console.log(urlPhotos.photo);
+
+    let farm = urlPhotos.photo.farm;
+    let server = urlPhotos.photo.server;
+    let secret = urlPhotos.photo.secret;
+    let photoId = urlPhotos.photo.id;
+    let format = urlPhotos.photo.originalformat;
+
+
+    paintImages(farm, server, secret, photoId, format);
+    // if(format !== undefined){
+    //     console.log(format);
+    //     paintImages(farm, server, secret, photoId, format);
+    // }
+   
+    // console.log(format);
+    // array.push(urlPhotos.photo);
+    // console.log(array);
+    // const filterFormat = array.filter(element => {
+    //     // console.log(element.originalformat);
+    //     return element.originalformat !== undefined;
+        
+    // filterFormat;
+    
+    
+    
+    // let urls = urlPhotos.photo.urls.url;
+    // // console.log(urls);
+    
+    // urls.forEach(element => {
+    //     // console.log(element);
+        
+    //     let images = element._content;
+    //     // console.log(images);
+        
+        
+    // })
+}
+
+// let count = 0;
+// setInterval(function(){
+//     // console.log(filterFormat);
+//     let farm = filterFormat[count].farm;
+//     let server = filterFormat[count].server;
+//     let secret = filterFormat[count].secret;
+//     let photoId = filterFormat[count].id;
+//     let format = filterFormat[count].originalformat;
+//      console.log(filterFormat[count]);
+//      paintImages(farm, server, secret, photoId, format)
+//      count++;
+// }, 5000)
+
+
+
+function paintImages(farm, server, secret, photoId, format) {
+    // arrayURL.push(`https://farm${farm}.staticflickr.com/${server}/${photoId}_${secret}.${format}`);
+    // console.log(arrayURL);    
+    // let urlImage = `https://farm${farm}.staticflickr.com/ ${server}/ ${photoId}_ ${secret} .${format}`;
+    container.style.backgroundImage = `url("https://farm${farm}.staticflickr.com/${server}/${photoId}_${secret}.${format}")`;
+}
+
 function data(weather) {
     
-    console.log(weather);
+    // console.log(weather);
     
     let humidity = weather.currently.humidity;
     let uvIndex = weather.currently.uvIndex;
